@@ -6,6 +6,15 @@ var mongo = require("mongoose")
 // HOST & PORT
 var HOST = '0.0.0.0'
 var PORT = 5555
+
+var db = mongo.connection
+db.on('error', console.error)
+db.once('open', function(){
+    console.log("[-] Connected to mongo serv")
+})
+
+mongo.connect("mongodb://localhost/js_mongodb")
+
 var socket = require('./socket/chatting_socket')(server)
 
 server.listen(PORT, HOST, function(){

@@ -4,7 +4,7 @@ module.exports = function(server)
     console.log("[-] SOCKET FUNC IS RUNNING")
 
     var chat = io.of('/chat').on('connection', function(socket) {
-        socket.on('chat message', function(data){
+        socket.on('get', function(data){
           console.log('message from client: ', data);
       
           var name = socket.name = data.name;
@@ -12,7 +12,7 @@ module.exports = function(server)
       
           socket.join(room);
       
-          chat.to(room).emit('chat message', data.msg);
+          chat.to(room).emit('get', data.msg);
         });
       });
 }
