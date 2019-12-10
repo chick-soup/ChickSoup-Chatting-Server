@@ -15,7 +15,9 @@ db.once('open', function(){
 
 mongo.connect("mongodb://localhost/js_mongodb")
 
-var socket = require('./socket/chatting_socket')(server)
+RoomModel = require('./models/room')
+
+var socket = require('./socket/chatting_socket')(server, RoomModel)
 
 server.listen(PORT, HOST, function(){
     console.log("Server has started on "+ HOST + ":" + PORT)
