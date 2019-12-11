@@ -4,6 +4,7 @@ var io = require('socket.io')(server);
 
 
 var chat = io.of('/chat').on('connection', function(socket) {
+  console.log("chatter")
   socket.on('chat message', function(data){
     console.log('message from client: ', data);
 

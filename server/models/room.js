@@ -1,7 +1,7 @@
-var mongoose = require('mongoose')
-var Schema = mongoose.Schema
+let mongoose = require('mongoose')
+let Schema = mongoose.Schema
 
-var RoomModel = new Schema({
+let RoomModel = new Schema({
     room_id: { type: String, unique: true},
     people: String,
     chatting_data: [{

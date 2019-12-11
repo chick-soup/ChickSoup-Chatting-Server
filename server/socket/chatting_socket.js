@@ -1,16 +1,17 @@
 module.exports = function(server, Room)
 {
-    var io = require('socket.io')(server);
-        console.log("[-] SOCKET FUNC IS RUNNING")
+    var io = require('socket.io')(server)
+    console.log("[-] SOCKET FUNC IS RUNNING")
 
-    var chat = io.of('/chat').on('connection', function(socket) {
+    var chat = io.on('connection', function(socket) {
+        console.log("[-] CONNECTED the socket")
         socket.on('get', function(data){
             console.log('message : ', data);
       
             var user = socket.user = data.user;
             var room = socket.room = data.room;
           
-            var room = new Room({
+            var roomModel = new Room({
                 room_id: room,
                 chatting_data: [{
                     seq: 1,
@@ -19,9 +20,9 @@ module.exports = function(server, Room)
                 }]
             })
 
-          socket.join(room);
+            socket.join(room);
       
-          chat.to(room).emit('get', data.msg);
+            chat.to(room).emit('get', data.msg);
         });
     });
 }
