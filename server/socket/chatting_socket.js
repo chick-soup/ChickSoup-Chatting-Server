@@ -25,4 +25,4 @@ module.exports = function(server, Room)
             chat.to(room).emit('get', data.msg);
         });
     });
-}
+}''
