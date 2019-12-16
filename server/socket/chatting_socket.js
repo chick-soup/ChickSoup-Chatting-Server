@@ -20,9 +20,11 @@ module.exports = function(server, Room)
                 }]
             })
 
+            roomModel.save()
+
             socket.join(room);
       
             chat.to(room).emit('get', data.msg);
         });
     });
-}''
+}
