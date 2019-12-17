@@ -12,9 +12,8 @@ module.exports = function(server, Room)
             var room = socket.room = data.room;
           
             var roomModel = new Room({
-                room_id: room,
+                _id: room,
                 chatting_data: [{
-                    seq: 1,
                     user_id: user,
                     chat: data.msg
                 }]
@@ -24,7 +23,7 @@ module.exports = function(server, Room)
 
             socket.join(room);
       
-            chat.to(room).emit('get', data.msg);
+            socket.broadcast.to(room).emit('get', data.msg);
         });
     });
 }
