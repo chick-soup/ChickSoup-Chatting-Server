@@ -1,10 +1,13 @@
 from flask import Flask
+from flask_socketio import SocketIO
 
 
-def create_app(*config_cls) -> Flask:
+def create_app(*config_cls):
     flask = Flask(__name__)
 
     for config in config_cls:
         flask.config.from_object(config)
 
-    return flask
+    socketIO = SocketIO(flask)
+
+    return flask, socketIO
