@@ -8,4 +8,5 @@ from config.appConfig import localLevelConfig
 
 if __name__ == '__main__':
     app, socketIO = create_app(localLevelConfig)
+    print('[INFO] Run')
     socketIO.run(app, **_localRunSetting)
