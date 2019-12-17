@@ -3,8 +3,8 @@ from flask_socketio import SocketIO
 
 
 def registerViews(app: Flask):
-    from app.views.apis import createRoom
-    app.register_blueprint(createRoom.api.blueprint)
+    from app.views.apis import room
+    app.register_blueprint(room.api.blueprint)
 
 
 def registerSocketIONamespace(socketApp: SocketIO):

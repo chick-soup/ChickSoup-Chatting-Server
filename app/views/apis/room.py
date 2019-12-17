@@ -8,3 +8,6 @@ api = Api(Blueprint(__name__, __name__))
 class roomManagement(Resource):
     def get(self):
         return 'Hello'
+
+    def post(self):
+        return 'POST'
