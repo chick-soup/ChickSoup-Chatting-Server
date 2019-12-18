@@ -1,8 +1,12 @@
 from flask import Flask
+
 from flask_socketio import SocketIO
+from flask_jwt_extended import JWTManager
 
 
-def registerHooks()
+def registerHooks(app: Flask):
+    JWTManager().init_app(app)
+
 
 def registerViews(app: Flask):
     from app.views.apis import room
@@ -23,5 +27,6 @@ def create_app(*config_cls):
 
     registerViews(flask)
     registerSocketIONamespace(socketIO)
+    registerHooks(flask)
 
     return flask, socketIO
