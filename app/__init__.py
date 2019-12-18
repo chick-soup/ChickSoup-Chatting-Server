@@ -2,14 +2,17 @@ from flask import Flask
 from flask_socketio import SocketIO
 
 
+def registerHooks()
+
 def registerViews(app: Flask):
     from app.views.apis import room
     app.register_blueprint(room.api.blueprint)
 
 
 def registerSocketIONamespace(socketApp: SocketIO):
-    from app.views.socket.chatting import testNamespace
-    socketApp.on_namespace(testNamespace('/'))
+    from app.views.socket.chatting import chattingNamespace
+    socketApp.on_namespace(chattingNamespace('/'))
+
 
 def create_app(*config_cls):
     flask = Flask(__name__)

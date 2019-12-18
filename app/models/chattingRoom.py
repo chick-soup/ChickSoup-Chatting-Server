@@ -18,8 +18,11 @@ class chatDataModel(EmbeddedDocument):
 class chattingRoomModel(Document):
     roomId = StringField(primary_key=True)
 
-    people = ListField()
+    roomName = StringField()
+
+    peoples = ListField()
 
     chatData = ListField(
-        EmbeddedDocumentField(chatDataModel)
+        EmbeddedDocumentField(chatDataModel),
+        null = True
     )
