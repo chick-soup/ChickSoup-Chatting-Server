@@ -1,3 +1,5 @@
+from time import time
+
 from flask_socketio import Namespace, emit, join_room, leave_room
 
 from app.models.chattingRoom import chattingRoomModel
@@ -30,8 +32,9 @@ class chattingNamespace(Namespace):
 
         chattingRoom.chatData.append({
             'userId': userId,
-            'name': userId,
-            'chat': chat
+            'name': 'UCHAN',
+            'chat': chat,
+            'time': time()
         })
 
         chattingRoom.save()
@@ -41,7 +44,8 @@ class chattingNamespace(Namespace):
         emit('chat', {
             'roomId': roomId,
             'userId': userId,
-            'chatData': chat
+            'chatData': chat,
+            'time': time()
         })
 
         leave_room(roomId)

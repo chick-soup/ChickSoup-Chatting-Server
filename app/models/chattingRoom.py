@@ -3,7 +3,8 @@ from mongoengine import (
     EmbeddedDocument,
     EmbeddedDocumentField,
     StringField,
-    ListField
+    ListField,
+    IntField
 )
 
 
@@ -13,6 +14,8 @@ class chatDataModel(EmbeddedDocument):
     name = StringField()
 
     chat = StringField()
+
+    time = IntField()
 
 
 class chattingRoomModel(Document):
