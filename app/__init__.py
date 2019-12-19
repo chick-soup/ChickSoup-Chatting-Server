@@ -1,12 +1,19 @@
 from flask import Flask
 
+from flask_cors import CORS
 from flask_socketio import SocketIO
 from flask_jwt_extended import JWTManager
 
+from mongoengine import connect
+from const import _localDatabaseSetting
 
-def registerHooks(app: Flask):
+
+def registerExtentions(app: Flask):
+    CORS(app, resources={
+        r"*": {"origin": "*"},
+    })
     JWTManager().init_app(app)
-
+    connect(**_localDatabaseSetting)
 
 def registerViews(app: Flask):
     from app.views.apis import room
@@ -20,13 +27,13 @@ def registerSocketIONamespace(socketApp: SocketIO):
 
 def create_app(*config_cls):
     flask = Flask(__name__)
-    socketIO = SocketIO(flask)
+    socketIO = SocketIO(flask, cors_allowed_origins="*", async_mode="threading")
 
     for config in config_cls:
         flask.config.from_object(config)
 
     registerViews(flask)
     registerSocketIONamespace(socketIO)
-    registerHooks(flask)
+    registerExtentions(flask)
 
     return flask, socketIO

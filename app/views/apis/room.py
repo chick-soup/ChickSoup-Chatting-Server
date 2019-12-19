@@ -26,9 +26,10 @@ class roomManagement(Resource):
             'rooms': res
         }, 200
 
-    @jwt_required
+    # @jwt_required
     def post(self):
-        roomId = get_jwt_identity()
+        # roomId = get_jwt_identity()
+        roomId = '34567'
 
         peoples = request.json['peoples']
 
@@ -43,7 +44,7 @@ class roomManagement(Resource):
 
 
         chattingRoomModel(
-            roomID = roomId,
+            roomId = roomId,
             roomName = roomName,
             peoples = peoples
         ).save()
