@@ -29,7 +29,7 @@ class roomManagement(Resource):
     # @jwt_required
     def post(self):
         # roomId = get_jwt_identity()
-        roomId = '34567'
+        roomId = '12345'
 
         peoples = request.json['peoples']
 

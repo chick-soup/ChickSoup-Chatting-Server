@@ -16,6 +16,7 @@ class chattingNamespace(Namespace):
         if not userId in chattingRoom['peoples'] or chattingRoom is None:
             return None
 
+        join_room(roomId)
         emit('chatData', chattingRoom['chatData'])
 
     def on_chatting(self, data):
@@ -39,13 +40,10 @@ class chattingNamespace(Namespace):
 
         chattingRoom.save()
 
-        join_room(roomId)
-
-        emit('chat', {
+        emit('realTimeChat', {
             'roomId': roomId,
             'userId': userId,
             'chatData': chat,
+            'name': 'TESTNAME',
             'time': time()
-        })
-
-        leave_room(roomId)
+        }, room = roomId)
