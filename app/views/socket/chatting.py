@@ -1,3 +1,4 @@
+import requests
 from time import time
 
 from flask_socketio import Namespace, emit, join_room, leave_room
@@ -22,9 +23,16 @@ class chattingNamespace(Namespace):
     def on_chatting(self, data):
         roomId = data['roomId']
 
+        token = data['token']
+
         userId = data['userId']
 
         chat = data['chat']
+
+        headers = {"Authorization": token}
+
+        userName = requests.get('http://ec2-13-209-99-114.ap-northeast-2.compute.amazonaws.com:8080/users/my/profile',headers=headers)\
+        .text.decode()
 
         chattingRoom = chattingRoomModel.objects(roomId = roomId).first()
 
@@ -33,7 +41,7 @@ class chattingNamespace(Namespace):
 
         chattingRoom.chatData.append({
             'userId': userId,
-            'name': 'UCHAN',
+            'name': userName,
             'chat': chat,
             'time': time()
         })
@@ -44,6 +52,6 @@ class chattingNamespace(Namespace):
             'roomId': roomId,
             'userId': userId,
             'chatData': chat,
-            'name': 'TESTNAME',
+            'name': userName,
             'time': time()
         }, room = roomId)
