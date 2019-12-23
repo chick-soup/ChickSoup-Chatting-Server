@@ -1,4 +1,5 @@
 from flask import Flask
+from elasticapm.contrib.flask import ElasticAPM
 
 from flask_cors import CORS
 from flask_socketio import SocketIO
@@ -14,6 +15,7 @@ def registerExtentions(app: Flask):
     })
     JWTManager().init_app(app)
     connect(**_localDatabaseSetting)
+    ElasticAPM().init_app(app, **app.config['ELASTIC_APM'])
 
 def registerViews(app: Flask):
     from app.views.apis import room
