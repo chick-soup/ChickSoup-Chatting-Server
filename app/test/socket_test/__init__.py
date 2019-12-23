@@ -21,6 +21,6 @@ sio.connect('http://127.0.0.1:3000/')
 while True:
     data = input()
     sio.emit('getChat', {
-        'roomId': '34567',
-        'userId': '2345',
+        'roomId': '12345',
+        'userId': '48',
     })

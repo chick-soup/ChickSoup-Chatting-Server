@@ -1,3 +1,5 @@
+import random
+
 from flask import Blueprint, request
 from flask_restful import Api, Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity
@@ -26,10 +28,18 @@ class roomManagement(Resource):
             'rooms': res
         }, 200
 
-    # @jwt_required
     def post(self):
-        # roomId = get_jwt_identity()
-        roomId = '12345'
+        while True:
+            flag = True
+            roomId = str(random.randrange(11111,99999))
+
+            for room in chattingRoomModel.objects().all():
+                if roomId == room['roomId']:
+                    flag = False
+                    break
+
+            if flag:
+                break
 
         peoples = request.json['peoples']
 
@@ -39,7 +49,8 @@ class roomManagement(Resource):
             chattingRoomModel.objects(roomId = roomId).first():
             return {
                 'status': 'ERROR',
-                'message': 'WRONG REQUEST'
+                'message': 'WRONG REQUEST',
+                'roomId': roomId
                    }, 409
 
 
