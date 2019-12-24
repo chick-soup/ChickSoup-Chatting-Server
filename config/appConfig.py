@@ -4,7 +4,7 @@ import os
 class localLevelConfig:
     ENV = 'Local'
     DEBUG = True
-    SECRET_KEY = 'secretKey'
+    SECRET_KEY = os.getenv('SECRET_KEY')
     ELASTIC_APM = {
         'SERVICE_NAME': 'chick_test_apm',
         'SECRET_TOKEN': 'secretToken',

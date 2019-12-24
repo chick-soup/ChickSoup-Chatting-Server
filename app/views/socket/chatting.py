@@ -1,16 +1,21 @@
+import os
+import jwt
 import requests
-from time import time
+import time
 
 from flask_socketio import Namespace, emit, join_room, leave_room
 
 from app.models.chattingRoom import chattingRoomModel
 
 
+
 class chattingNamespace(Namespace):
+    reader = []
+
     def on_getChat(self, data):
         roomId = data['roomId']
 
-        userId = data['userId']
+        userId = jwt.decode(data['token'], os.getenv('SECRET_KEY'))['id']
 
         chattingRoom = chattingRoomModel.objects(roomId = roomId).first()
 
@@ -21,6 +26,7 @@ class chattingNamespace(Namespace):
             return None
 
         join_room(roomId)
+        self.reader.append(userId)
         emit('chatData', chattingRoom['chatData'])
 
     def on_chatting(self, data):
@@ -28,7 +34,7 @@ class chattingNamespace(Namespace):
 
         token = data['token']
 
-        userId = data['userId']
+        userId = jwt.decode(token, os.getenv('SECRET_KEY'))['id']
 
         chat = data['chat']
 
@@ -41,13 +47,17 @@ class chattingNamespace(Namespace):
         if not userId in chattingRoom['peoples'] or chattingRoom is None:
             return None
 
+        for readers in chattingRoom['chatData']['read']:
+            for human in self.reader:
+                readers.append(human)
+
         chattingRoom.chatData.append({
             'userId': userId,
             'name': userName,
             'chat': chat,
-            'time': time()
+            'time': time.time(),
+            'read': readers
         })
-
         chattingRoom.save()
 
         emit('realTimeChat', {
@@ -55,5 +65,9 @@ class chattingNamespace(Namespace):
             'userId': userId,
             'chatData': chat,
             'name': userName,
-            'time': time()
+            'time': time.time()
         }, room = roomId)
+
+
+    def on_quitChat(self, data):
+        leave_room(data['roomId'])

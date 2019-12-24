@@ -17,6 +17,8 @@ class chatDataModel(EmbeddedDocument):
 
     time = IntField()
 
+    read = ListField()
+
 
 class chattingRoomModel(Document):
     roomId = StringField(primary_key=True)
