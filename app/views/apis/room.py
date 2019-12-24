@@ -1,3 +1,5 @@
+import os
+import jwt
 import random
 
 from flask import Blueprint, request
@@ -28,6 +30,7 @@ class roomManagement(Resource):
             'rooms': res
         }, 200
 
+    @jwt_required
     def post(self):
         while True:
             flag = True
@@ -40,10 +43,13 @@ class roomManagement(Resource):
 
             if flag:
                 break
-
+        id = str(jwt.decode(request.json['token'], os.getenv('SECRET_KEY'))['id'])
         peoples = request.json['peoples']
-
         roomName = request.json['roomName']
+        if not id in peoples:
+            return {
+                'status': 'ERROR'
+            }
 
         if peoples is None or \
             chattingRoomModel.objects(roomId = roomId).first():

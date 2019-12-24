@@ -11,13 +11,13 @@ from mongoengine import (
 class chatDataModel(EmbeddedDocument):
     userId = StringField()
 
+    type = StringField()
+
     name = StringField()
 
     chat = StringField()
 
     time = IntField()
-
-    read = ListField()
 
 
 class chattingRoomModel(Document):

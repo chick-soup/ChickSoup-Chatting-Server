@@ -10,12 +10,10 @@ from app.models.chattingRoom import chattingRoomModel
 
 
 class chattingNamespace(Namespace):
-    reader = []
-
     def on_getChat(self, data):
         roomId = data['roomId']
 
-        userId = jwt.decode(data['token'], os.getenv('SECRET_KEY'))['id']
+        userId = str(jwt.decode(data['token'], os.getenv('SECRET_KEY'))['id'])
 
         chattingRoom = chattingRoomModel.objects(roomId = roomId).first()
 
@@ -26,17 +24,19 @@ class chattingNamespace(Namespace):
             return None
 
         join_room(roomId)
-        self.reader.append(userId)
         emit('chatData', chattingRoom['chatData'])
+
 
     def on_chatting(self, data):
         roomId = data['roomId']
 
         token = data['token']
 
-        userId = jwt.decode(token, os.getenv('SECRET_KEY'))['id']
+        userId = str(jwt.decode(token, os.getenv('SECRET_KEY'))['id'])
 
         chat = data['chat']
+
+        type = data['type']
 
         headers = {"Authorization": token}
 
@@ -45,27 +45,27 @@ class chattingNamespace(Namespace):
         chattingRoom = chattingRoomModel.objects(roomId = roomId).first()
 
         if not userId in chattingRoom['peoples'] or chattingRoom is None:
+            emit('realTimeChat', {
+                'ERROR':"이성진이 병신일때 일어나는 에러"
+            })
             return None
-
-        for readers in chattingRoom['chatData']['read']:
-            for human in self.reader:
-                readers.append(human)
 
         chattingRoom.chatData.append({
             'userId': userId,
             'name': userName,
             'chat': chat,
             'time': time.time(),
-            'read': readers
+            'type': type
         })
         chattingRoom.save()
 
         emit('realTimeChat', {
             'roomId': roomId,
             'userId': userId,
-            'chatData': chat,
+            'chat': chat,
             'name': userName,
-            'time': time.time()
+            'time': time.time(),
+            'type' : type
         }, room = roomId)
 
 
