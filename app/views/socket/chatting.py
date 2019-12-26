@@ -17,7 +17,8 @@ class chattingNamespace(Namespace):
 
         chattingRoom = chattingRoomModel.objects(roomId = roomId).first()
 
-        if not userId in chattingRoom['peoples'] or chattingRoom is None:
+        if not userId in chattingRoom['people'] or chattingRoom is None:
+            print(chattingRoom['people'], userId)
             emit('chatData', {
                 'status':'ERROR'
             })
@@ -25,6 +26,10 @@ class chattingNamespace(Namespace):
 
         join_room(roomId)
         emit('chatData', chattingRoom['chatData'])
+        emit('chatStatus', {
+            'name': chattingRoom['roomName'],
+            'people': chattingRoom['people']
+        })
 
 
     def on_chatting(self, data):
@@ -44,7 +49,7 @@ class chattingNamespace(Namespace):
 
         chattingRoom = chattingRoomModel.objects(roomId = roomId).first()
 
-        if not userId in chattingRoom['peoples'] or chattingRoom is None:
+        if not userId in chattingRoom['people'] or chattingRoom is None:
             emit('realTimeChat', {
                 'ERROR':"이성진이 병신일때 일어나는 에러"
             })

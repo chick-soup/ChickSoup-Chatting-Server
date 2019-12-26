@@ -4,7 +4,6 @@ import random
 
 from flask import Blueprint, request
 from flask_restful import Api, Resource
-from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from app.models.chattingRoom import chattingRoomModel
 
@@ -13,24 +12,23 @@ api = Api(Blueprint(__name__, __name__))
 
 @api.resource('/room')
 class roomManagement(Resource):
-    @jwt_required
     def get(self):
-        UserId = get_jwt_identity()
+        UserId = str(jwt.decode(request.headers['Authorization'], os.getenv('SECRET_KEY'))['id'])
 
         res = []
 
         for chattingRoom in chattingRoomModel.objects().all():
-            if UserId in chattingRoom['peoples']:
+            if UserId in chattingRoom['people']:
                 res.append({
                     'roomId':chattingRoom['roomId'],
-                    'roomName':chattingRoom['roomName']
+                    'roomName':chattingRoom['roomName'],
+                    'people': chattingRoom['people']
                 })
         return {
             'status': 'OK',
             'rooms': res
         }, 200
 
-    @jwt_required
     def post(self):
         while True:
             flag = True
@@ -43,15 +41,13 @@ class roomManagement(Resource):
 
             if flag:
                 break
-        id = str(jwt.decode(request.json['token'], os.getenv('SECRET_KEY'))['id'])
-        peoples = request.json['peoples']
+        id = str(jwt.decode(request.headers['Authorization'], os.getenv('SECRET_KEY'))['id'])
+        people = request.json['people']
         roomName = request.json['roomName']
-        if not id in peoples:
-            return {
-                'status': 'ERROR'
-            }
 
-        if peoples is None or \
+        people.append(id)
+
+        if people is None or \
             chattingRoomModel.objects(roomId = roomId).first():
             return {
                 'status': 'ERROR',
@@ -63,10 +59,25 @@ class roomManagement(Resource):
         chattingRoomModel(
             roomId = roomId,
             roomName = roomName,
-            peoples = peoples
+            people = people
         ).save()
 
         return {
             'status': 'OK',
             'message': 'CREATED THE CHATTING ROOM'
                }, 201
+
+    def put(self):
+        roomId = request.json['roomId']
+
+        roomName = request.json['roomName']
+
+        chattingRoom = chattingRoomModel.objects(roomId=roomId).first()
+
+        chattingRoom.update(
+            roomName = roomName
+        )
+
+        chattingRoom.save()
+
+        return 201

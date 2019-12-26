@@ -25,7 +25,7 @@ class chattingRoomModel(Document):
 
     roomName = StringField()
 
-    peoples = ListField()
+    people = ListField()
 
     chatData = ListField(
         list = EmbeddedDocumentField(chatDataModel),
