@@ -50,9 +50,6 @@ class chattingNamespace(Namespace):
         chattingRoom = chattingRoomModel.objects(roomId = roomId).first()
 
         if not userId in chattingRoom['people'] or chattingRoom is None:
-            emit('realTimeChat', {
-                'ERROR':"이성진이 병신일때 일어나는 에러"
-            })
             return None
 
         chattingRoom.chatData.append({
