@@ -13,7 +13,12 @@ api = Api(Blueprint(__name__, __name__))
 @api.resource('/room')
 class roomManagement(Resource):
     def get(self):
-        UserId = str(jwt.decode(request.headers['Authorization'], os.getenv('SECRET_KEY'))['id'])
+        try:
+            UserId = str(jwt.decode(request.headers['Authorization'], os.getenv('SECRET_KEY'))['id'])
+        except:
+            return {
+                "status":"token has expired"
+            }, 403
 
         res = []
 
@@ -41,7 +46,13 @@ class roomManagement(Resource):
 
             if flag:
                 break
-        id = str(jwt.decode(request.headers['Authorization'], os.getenv('SECRET_KEY'))['id'])
+        try:
+            id = str(jwt.decode(request.headers['Authorization'], os.getenv('SECRET_KEY'))['id'])
+        except:
+            return {
+                       "status": "token has expired"
+                   }, 403
+
         people = request.json['people']
         roomName = request.json['roomName']
 

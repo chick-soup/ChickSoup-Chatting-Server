@@ -5,5 +5,5 @@ from config.appConfig import productionLevelConfig
 
 
 if __name__ == '__main__':
-    app = create_app(productionLevelConfig)
-    app.run(**_productionRunSetting)
+    app, socketIO = create_app(productionLevelConfig)
+    socketIO.run(app, **_productionRunSetting)
