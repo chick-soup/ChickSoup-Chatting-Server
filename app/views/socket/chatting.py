@@ -45,7 +45,7 @@ class chattingNamespace(Namespace):
 
         headers = {"Authorization": token}
 
-        userName = requests.get('http://ec2-13-209-99-114.ap-northeast-2.compute.amazonaws.com:8080/users/my/profile',headers=headers).text
+        userName = requests.get('http://ec2-13-125-190-40.ap-northeast-2.compute.amazonaws.com:8080/users/my/profile',headers=headers).text
 
         chattingRoom = chattingRoomModel.objects(roomId = roomId).first()
 
