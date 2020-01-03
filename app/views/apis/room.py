@@ -92,3 +92,33 @@ class roomManagement(Resource):
         chattingRoom.save()
 
         return 201
+
+    def delete(self):
+        try:
+            id = str(jwt.decode(request.headers['Authorization'], os.getenv('SECRET_KEY'))['id'])
+        except:
+            return {
+                       "status": "token has expired"
+                   }, 403
+        roomId = request.json['roomId']
+
+        chattingRoom = chattingRoomModel.objects(roomId=roomId).first90
+
+        people = chattingRoom['people']
+
+        try:
+            people.remove(id)
+        except:
+            return {
+                "status": "Bad request"
+            }, 403
+
+        chattingRoom.update(
+            people = people
+        )
+
+        chattingRoom.save()
+
+        return {
+            "status": "OK"
+        }, 200
