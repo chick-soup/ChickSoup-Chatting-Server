@@ -79,6 +79,12 @@ class roomManagement(Resource):
                }, 201
 
     def put(self):
+        try:
+            id = str(jwt.decode(request.headers['Authorization'], os.getenv('SECRET_KEY'))['id'])
+        except:
+            return {
+                       "status": "token has expired"
+                   }, 403
         roomId = request.json['roomId']
 
         roomName = request.json['roomName']
@@ -102,7 +108,7 @@ class roomManagement(Resource):
                    }, 403
         roomId = request.json['roomId']
 
-        chattingRoom = chattingRoomModel.objects(roomId=roomId).first90
+        chattingRoom = chattingRoomModel.objects(roomId=roomId).first()
 
         people = chattingRoom['people']
 
